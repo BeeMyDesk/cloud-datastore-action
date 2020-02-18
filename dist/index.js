@@ -48526,17 +48526,20 @@ const setupCredentials = async (base64ServiceAccount) => {
 };
 
 const setEntity = async (projectId, action, kind, name, jsonData) => {
-  if (action !== 'save' && action !== 'merge') {
-    throw new WrongMethodError();
-  }
-
   const datastore = new Datastore({ projectId, keyFilename: credentialsPath });
 
   const data = JSON.parse(jsonData);
   const key = datastore.key([kind, name]);
   const entity = { key, data };
 
-  const method = datastore[action];
+  let method;
+  if (action === 'save') {
+    method = datastore.save;
+  } else if (action == 'merge') {
+    method = datastore.merge;
+  } else {
+    throw new WrongMethodError();
+  }
   await method(entity);
 
   return entity;
