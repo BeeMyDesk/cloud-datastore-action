@@ -5,10 +5,10 @@ inputs:
     description: 'Service account key encoded in base64.'
     required: true
   project_id:
-    description: 'Google Cloud project ID'
+    description: 'Google Cloud Project ID'
     required: true
   action:
-    description: 'Action to perform on the entity. "save" will overwrite the whole entity, while "merge" will keep the existing value that are not specified.'
+    description: 'Action to perform on the entity. `save` will overwrite the whole entity, while `merge` will keep the existing properties not specified here.'
     required: true
     default: save
   entity_kind:
