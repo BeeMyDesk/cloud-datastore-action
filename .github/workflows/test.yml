@@ -26,4 +26,4 @@ jobs:
         project_id: ${{ secrets.GOOGLE_PROJECT_ID }}
         entity_kind: cloud-datastore-action-test
         entity_name:  cloud-datastore-action-test-1
-        entity_data: '{"hardcoded": 42, "dynamic": ${{github.sha}}}'
+        entity_data: '{"hardcoded": 42, "dynamic": "${{github.sha}}"}'
