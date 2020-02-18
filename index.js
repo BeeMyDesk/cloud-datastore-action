@@ -9,11 +9,12 @@ async function run() {
     core.debug(`Credentials written to ${credentialsPath}`);
 
     const projectId = core.getInput('project_id');
+    const action = core.getInput('action');
     const kind = core.getInput('entity_kind');
     const name = core.getInput('entity_name');
     const jsonData = core.getInput('entity_data');
 
-    const entity = await setEntity(projectId, kind, name, jsonData);
+    const entity = await setEntity(projectId, action, kind, name, jsonData);
 
     core.info(`Saved ${entity.key.name}`);
   }

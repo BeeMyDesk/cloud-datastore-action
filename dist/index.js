@@ -10350,11 +10350,12 @@ async function run() {
     core.debug(`Credentials written to ${credentialsPath}`);
 
     const projectId = core.getInput('project_id');
+    const action = core.getInput('action');
     const kind = core.getInput('entity_kind');
     const name = core.getInput('entity_name');
     const jsonData = core.getInput('entity_data');
 
-    const entity = await setEntity(projectId, kind, name, jsonData);
+    const entity = await setEntity(projectId, action, kind, name, jsonData);
 
     core.info(`Saved ${entity.key.name}`);
   }
@@ -48505,6 +48506,8 @@ const path = __webpack_require__(622);
 
 const { Datastore } = __webpack_require__(708);
 
+class WrongMethodError extends Error {}
+
 const credentialsPath = path.join(__dirname, 'credentials.json');
 
 const setupCredentials = async (base64ServiceAccount) => {
@@ -48522,19 +48525,24 @@ const setupCredentials = async (base64ServiceAccount) => {
   return await writeCredentialsPromise;
 };
 
-const setEntity = async (projectId, kind, name, jsonData) => {
+const setEntity = async (projectId, action, kind, name, jsonData) => {
+  if (action !== 'save' && action !== 'merge') {
+    throw new WrongMethodError();
+  }
+
   const datastore = new Datastore({ projectId, keyFilename: credentialsPath });
 
   const data = JSON.parse(jsonData);
   const key = datastore.key([kind, name]);
   const entity = { key, data };
 
-  await datastore.save(entity);
+  const method = datastore[action];
+  await method(entity);
 
   return entity;
 };
 
-module.exports = { credentialsPath, setupCredentials, setEntity };
+module.exports = { credentialsPath, setupCredentials, setEntity, WrongMethodError };
 
 
 /***/ }),

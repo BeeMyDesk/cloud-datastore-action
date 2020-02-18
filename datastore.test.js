@@ -2,7 +2,7 @@ const fs = require('fs');
 
 const datastore = require('@google-cloud/datastore');
 
-const { credentialsPath, setEntity, setupCredentials } = require('./datastore');
+const { credentialsPath, setEntity, setupCredentials, WrongMethodError } = require('./datastore');
 
 jest.mock('@google-cloud/datastore');
 
@@ -20,16 +20,30 @@ describe('setupCredentials', () => {
 
 describe('setEntity', () => {
   test('invalid JSON data', async () => {
-    expect(setEntity('projectId', 'foo', 'bar', 'invalid_data')).rejects.toThrow();
+    expect(setEntity('projectId', 'save', 'foo', 'bar', 'invalid_data')).rejects.toThrow();
   });
 
-  test('valid data', async () => {
+  test('invalid method', async () => {
+    expect(setEntity('projectId', 'wrong_method', 'foo', 'bar', '{"value": 42}')).rejects.toThrow(WrongMethodError);
+  });
+
+  test('save method', async () => {
     const mockKey = { kind: 'foo', name: 'bar' };
     datastore.Datastore.prototype.key.mockReturnValue(mockKey);
-    await setEntity('projectId', 'foo', 'bar', '{"value": 42}');
+    await setEntity('projectId', 'save', 'foo', 'bar', '{"value": 42}');
 
     expect(datastore.Datastore).toHaveBeenCalledWith({ projectId: 'projectId', keyFilename: credentialsPath });
     expect(datastore.Datastore.prototype.key).toHaveBeenCalledWith(['foo', 'bar']);
     expect(datastore.Datastore.prototype.save).toHaveBeenCalledWith({ key: mockKey, data: { value: 42 }});
+  });
+
+  test('merge method', async () => {
+    const mockKey = { kind: 'foo', name: 'bar' };
+    datastore.Datastore.prototype.key.mockReturnValue(mockKey);
+    await setEntity('projectId', 'merge', 'foo', 'bar', '{"value": 42}');
+
+    expect(datastore.Datastore).toHaveBeenCalledWith({ projectId: 'projectId', keyFilename: credentialsPath });
+    expect(datastore.Datastore.prototype.key).toHaveBeenCalledWith(['foo', 'bar']);
+    expect(datastore.Datastore.prototype.merge).toHaveBeenCalledWith({ key: mockKey, data: { value: 42 }});
   });
 });

@@ -7,7 +7,6 @@ on:
       - 'releases/*'
 
 jobs:
-  # unit tests
   units:
     runs-on: ubuntu-latest
     steps:
@@ -15,8 +14,11 @@ jobs:
     - run: npm ci
     - run: npm test
 
-  # test action works running from the graph
-  test:
+  test-action-${{ matrix.action }}:
+    strategy:
+      matrix:
+        action: [save, merge]
+
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v1
@@ -24,6 +26,7 @@ jobs:
       with:
         credentials: ${{ secrets.GOOGLE_APPLICATION_CREDENTIALS }}
         project_id: ${{ secrets.GOOGLE_PROJECT_ID }}
+        action: ${{ matrix.action }}
         entity_kind: cloud-datastore-action-test
         entity_name:  cloud-datastore-action-test-1
         entity_data: '{"value": 42, "sha": "${{github.sha}}"}'

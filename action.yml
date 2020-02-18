@@ -7,6 +7,10 @@ inputs:
   project_id:
     description: 'Google Cloud project ID'
     required: true
+  action:
+    description: 'Action to perform on the entity. "save" will overwrite the whole entity, while "merge" will keep the existing value that are not specified.'
+    required: true
+    default: save
   entity_kind:
     description: 'Kind of entity'
     required: true
