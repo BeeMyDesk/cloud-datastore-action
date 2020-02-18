@@ -9,7 +9,7 @@ Easily set an entity in Google Cloud Datastore during your GitHub Actions workfl
 ## Usage
 
 ```yaml
-- uses: BeeMyDesk/cloud-datastore-action@v1
+- uses: BeeMyDesk/cloud-datastore-action@v1.0.0
   with:
     credentials: ${{ secrets.GOOGLE_APPLICATION_CREDENTIALS }}
     project_id: ${{ secrets.GOOGLE_PROJECT_ID }}
