@@ -48532,15 +48532,13 @@ const setEntity = async (projectId, action, kind, name, jsonData) => {
   const key = datastore.key([kind, name]);
   const entity = { key, data };
 
-  let method;
   if (action === 'save') {
-    method = datastore.save;
+    await datastore.save(entity);
   } else if (action == 'merge') {
-    method = datastore.merge;
+    await datastore.merge(entity);
   } else {
     throw new WrongMethodError();
   }
-  await method(entity);
 
   return entity;
 };
