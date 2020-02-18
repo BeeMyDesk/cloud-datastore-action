@@ -10346,7 +10346,8 @@ const { setEntity, setupCredentials } = __webpack_require__(378);
 async function run() {
   try {
     const credentials = core.getInput('credentials');
-    await setupCredentials(credentials);
+    const credentialsPath = await setupCredentials(credentials);
+    core.debug(`Credentials written to ${credentialsPath}`);
 
     const projectId = core.getInput('project_id');
     const kind = core.getInput('entity_kind');

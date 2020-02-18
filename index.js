@@ -5,7 +5,8 @@ const { setEntity, setupCredentials } = require('./datastore');
 async function run() {
   try {
     const credentials = core.getInput('credentials');
-    await setupCredentials(credentials);
+    const credentialsPath = await setupCredentials(credentials);
+    core.debug(`Credentials written to ${credentialsPath}`);
 
     const projectId = core.getInput('project_id');
     const kind = core.getInput('entity_kind');
