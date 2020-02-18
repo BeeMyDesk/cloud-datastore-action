@@ -14,7 +14,7 @@ jobs:
     - run: npm ci
     - run: npm test
 
-  test-action-${{ matrix.action }}:
+  test-action:
     strategy:
       matrix:
         action: [save, merge]
@@ -28,5 +28,5 @@ jobs:
         project_id: ${{ secrets.GOOGLE_PROJECT_ID }}
         action: ${{ matrix.action }}
         entity_kind: cloud-datastore-action-test
-        entity_name:  cloud-datastore-action-test-1
+        entity_name:  cloud-datastore-action-test-${{ matrix.action }}
         entity_data: '{"value": 42, "sha": "${{github.sha}}"}'
