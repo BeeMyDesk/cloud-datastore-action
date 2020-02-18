@@ -1,22 +1,24 @@
 const core = require('@actions/core');
-const wait = require('./wait');
 
+const { setEntity, setupCredentials } = require('./datastore');
 
-// most @actions toolkit packages have async methods
 async function run() {
-  try { 
-    const ms = core.getInput('milliseconds');
-    console.log(`Waiting ${ms} milliseconds ...`)
+  try {
+    const credentials = core.getInput('credentials');
+    await setupCredentials(credentials);
 
-    core.debug((new Date()).toTimeString())
-    await wait(parseInt(ms));
-    core.debug((new Date()).toTimeString())
+    const projectId = core.getInput('project_id');
+    const kind = core.getInput('entity_kind');
+    const name = core.getInput('entity_name');
+    const jsonData = core.getInput('entity_data');
 
-    core.setOutput('time', new Date().toTimeString());
-  } 
+    const entity = await setEntity(projectId, kind, name, jsonData);
+
+    core.info(`Saved ${entity.key.name}`);
+  }
   catch (error) {
     core.setFailed(error.message);
   }
 }
 
-run()
+run();

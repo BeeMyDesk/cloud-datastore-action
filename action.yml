@@ -1,13 +1,21 @@
-name: 'Wait'
-description: 'Wait a designated number of milliseconds'
+name: 'Set Google Cloud Datastore Entity'
+description: 'Insert or update an entity in Google Cloud Datastore'
 inputs:
-  milliseconds:  # id of input
-    description: 'number of milliseconds to wait'
+  credentials:
+    description: 'Service account key encoded in base64.'
     required: true
-    default: '1000'
-outputs:
-  time: # output will be available to future steps 
-    description: 'The message to output'
+  project_id:
+    description: 'Google Cloud project ID'
+    required: true
+  entity_kind:
+    description: 'Kind of entity'
+    required: true
+  entity_name:
+    description: 'Name of the entity to insert/update'
+    required: true
+  entity_data:
+    description: 'JSON representation of the entity data'
+    required: true
 runs:
   using: 'node12'
   main: 'dist/index.js'
